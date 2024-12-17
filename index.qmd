@@ -1,6 +1,6 @@
 ---
-title: "Figure from - Mapping and prioritizing a regional climate corridor network in the Amazon basin"
-author: "Christopher Beirne and Ian McCullough"
+title: "Figures from - Mapping and prioritizing a regional climate corridor network in the Amazon basin"
+author: "Christopher Beirne, Ian McCullough, and Andrew Whitworth"
 format: html
 editor: visual
 project:
@@ -10,15 +10,15 @@ project:
 
 ## Interactive Figures
 
-The following figures are interactive versions of those included in the New Venture Fund project - *Mapping and prioritizing a regional climate corridor network in the Amazon basin*.
+The following figures are interactive versions of those included in the New Venture Fund project - **Mapping and prioritizing a regional climate corridor network in the Amazon basin**.
 
-It is important to note that the are not exact replicates, but all of the information included in them is the same. 
+It is important to note that the are not exact replicates, but all of the information included in them is the same.
 
 ## Figure 1
 
 Summary figures of the study region.
 
-```{r, echo=F}
+```{r, echo=F, message=F, warning=F}
 library(leaflet)
 library(sf)
 
@@ -27,21 +27,60 @@ library(sf)
 prov <- st_read("data/regions/Provinces_with_conductance_stats.shp")
 prov <- st_transform(prov,4326)
 
+# This isnt the right one
+#limit <- st_read("data/regions/Lim_Raisg.shp")
+#limit <- st_transform(limit,4326)
+#limit <- st_zm(limit, drop = T, what = "ZM")
+
+
+prov$cols <- NA
+prov$cols[prov$IDDominio=="Boreal"] <- "#62cbee"
+prov$cols[prov$IDDominio=="South"] <- "#d7c43e"
+prov$cols[prov$IDDominio=="Chacoan"] <- "#ace35a"
 
 leaflet() %>%  
   addProviderTiles(
     providers$Esri.WorldImagery,
     options = providerTileOptions(opacity = 1)) %>% 
-    addPolygons(data = prov, fill=T, color = "black",      weight=3,opacity=1,stroke=T)
-  
+  # provinces
+  addPolygons(data = prov, fill=T, color = prov$cols, weight=2,opacity=1,fillOpacity=0.4,stroke=T, label=prov$Provincias, group="Provinces") %>%
+  # Amazon limit
+#  addPolygons(data = limit, fill=F, color = "black", weight=2,opacity=1,fillOpacity=0.4,stroke=T, group="Area of interest") %>% 
+  addLayersControl(
+    overlayGroups = c("Provinces"),
+    options = layersControlOptions(collapsed = FALSE)
+  ) 
 
 ```
 
-You can add options to executable code like this
+## Figure 2
 
-```{r}
-#| echo: false
-2 * 2
+A map of biome wide conductance and summaries by province. Where conductance represents movement potential for biodiversity throughout the Amazon. High conductance (darker colors) represents greater movement potential and low conductance represents lower movement potential (lighter colors).
+
+**Important note** this layer has been down-scaled to allow plotting.
+
+```{r, echo=F, message=F, warning=F}
+library(terra)
+
+# Read in the conducatance surface
+
+cond <- rast("data/conductance/amazon_conductance_500m_AmazonClip.tif")
+names(cond) <- "Conductance"
+# This isnt the right one
+#limit <- st_read("data/regions/Lim_Raisg.shp")
+#limit <- st_transform(limit,4326)
+#limit <- st_zm(limit, drop = T, what = "ZM")
+
+plet(cond,legend="topright", tiles=c("Esri.WorldImagery"),maxcell=3000000)
+
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+## Figure 3
+
+Corridor characterization summaries. Where, *'Least cost paths'* = least cost path density (number of paths per 10 km2) based on a total of 2217 least cost paths throughout the region; *'Circuitscape'* = current flow output in percentile bins. Higher current flow represents greater ecological movement potential (i.e., more corridors). 
+
+## Figure 4
+
+Summaries of priority areas (circuitscape) and corridors (least cost paths). Where, *'circuitscape'* = high-current flow areas as define by circuitscape analysis (≥ 80th percentile), including both unprotected and protected locations; *'least cost paths'* = least cost paths by priority level. Shown here are 115 high-, 834 medium-, and 1,268 low-priority corridors based on the principal components analyses.  High resolution figures are stored here (link); interactive map hosted here (link).
+
+
