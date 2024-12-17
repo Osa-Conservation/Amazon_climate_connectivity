@@ -8,18 +8,32 @@ project:
   output-dir: docs
 ---
 
-## Quarto
+## Interactive Figures
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+The following figures are interactive versions of those included in the New Venture Fund project - *Mapping and prioritizing a regional climate corridor network in the Amazon basin*.
 
-## Running Code
+It is important to note that the are not exact replicates, but all of the information included in them is the same. 
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+## Figure 1
+
+Summary figures of the study region.
 
 ```{r, echo=F}
 library(leaflet)
+library(sf)
 
-leaflet()
+# Read in the georegions
+
+prov <- st_read("data/regions/Provinces_with_conductance_stats.shp")
+prov <- st_transform(prov,4326)
+
+
+leaflet() %>%  
+  addProviderTiles(
+    providers$Esri.WorldImagery,
+    options = providerTileOptions(opacity = 1)) %>% 
+    addPolygons(data = prov, fill=T, color = "black",      weight=3,opacity=1,stroke=T)
+  
 
 ```
 
