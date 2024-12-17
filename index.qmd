@@ -16,9 +16,9 @@ It is important to note that the are not exact replicates, but all of the inform
 
 ## Figure 1
 
-Summary figures of the study region.
+Summary figure of the study area of interest (AOI), biogeographical provinces, protected areas and Key Biodiversity Areas (KBAs).
 
-```{r, echo=F, message=F, warning=F}
+```{r, echo=F, message=F, warning=F, include=F}
 library(leaflet)
 library(sf)
 
@@ -26,6 +26,11 @@ library(sf)
 
 prov <- st_read("data/regions/Provinces_with_conductance_stats.shp")
 prov <- st_transform(prov,4326)
+
+```
+
+```{r, echo=F, message=F, warning=F}
+
 
 # This isnt the right one
 #limit <- st_read("data/regions/Lim_Raisg.shp")
@@ -64,6 +69,8 @@ library(terra)
 
 # Read in the conducatance surface
 
+# NOT THIS FILE IS TO BIG FOR GITHUB
+
 cond <- rast("data/conductance/amazon_conductance_500m_AmazonClip.tif")
 names(cond) <- "Conductance"
 # This isnt the right one
@@ -77,10 +84,8 @@ plet(cond,legend="topright", tiles=c("Esri.WorldImagery"),maxcell=3000000)
 
 ## Figure 3
 
-Corridor characterization summaries. Where, *'Least cost paths'* = least cost path density (number of paths per 10 km2) based on a total of 2217 least cost paths throughout the region; *'Circuitscape'* = current flow output in percentile bins. Higher current flow represents greater ecological movement potential (i.e., more corridors). 
+Corridor characterization summaries. Where, *'Least cost paths'* = least cost path density (number of paths per 10 km2) based on a total of 2217 least cost paths throughout the region; *'Circuitscape'* = current flow output in percentile bins. Higher current flow represents greater ecological movement potential (i.e., more corridors).
 
 ## Figure 4
 
-Summaries of priority areas (circuitscape) and corridors (least cost paths). Where, *'circuitscape'* = high-current flow areas as define by circuitscape analysis (≥ 80th percentile), including both unprotected and protected locations; *'least cost paths'* = least cost paths by priority level. Shown here are 115 high-, 834 medium-, and 1,268 low-priority corridors based on the principal components analyses.  High resolution figures are stored here (link); interactive map hosted here (link).
-
-
+Summaries of priority areas (circuitscape) and corridors (least cost paths). Where, *'circuitscape'* = high-current flow areas as define by circuitscape analysis (≥ 80th percentile), including both unprotected and protected locations; *'least cost paths'* = least cost paths by priority level. Shown here are 115 high-, 834 medium-, and 1,268 low-priority corridors based on the principal components analyses. High resolution figures are stored here (link); interactive map hosted here (link).
